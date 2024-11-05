@@ -1,7 +1,7 @@
 # spring-calendar 🗓
 
 ## ERD 📁
-<img width="280" alt="schedule ERD 2024-10-31 오후 3 07 37" src="https://github.com/user-attachments/assets/a87efe67-6072-4506-b851-cb956f91a9dd">
+<img width="280" alt="스크린샷 2024-11-05 오후 5 23 52" src="https://github.com/user-attachments/assets/2d247233-08e0-4932-a3f5-fe68647aadca">
 
 ## API 📋
 [API 링크 바로가기](https://documenter.getpostman.com/view/39375040/2sAY4vfhKe)
