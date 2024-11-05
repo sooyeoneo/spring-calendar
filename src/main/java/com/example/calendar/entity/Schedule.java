@@ -8,9 +8,9 @@ import lombok.Getter;
 public class Schedule {
     private Long id;  // 식별자 타입 Long, int 보다 큰 값, null을 포함하는 래퍼클래스
     private String title;
-    private String body;
-    private String user_name;
+    private String contents;
+    private String userName;
     private String password;
-    private String created_at;
-    private String updated_at;
+    private String createdAt;
+    private String updatedAt;
 }
