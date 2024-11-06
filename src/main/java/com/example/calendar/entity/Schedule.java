@@ -7,6 +7,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class Schedule {
+
     private Long id;  // 식별자 타입 Long, int 보다 큰 값, null을 포함하는 래퍼클래스
     private String userName;
     private String password;
@@ -22,8 +23,10 @@ public class Schedule {
         this.contents = dto.getContents();
     }
 
-    public Schedule(Long id, String title, String contents) {
+    public Schedule(Long id, String userName, String password, String title, String contents) {
         this.id = id;
+        this.userName = userName;
+        this.password = password;
         this.title = title;
         this.contents = contents;
     }

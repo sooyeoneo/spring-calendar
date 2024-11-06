@@ -16,7 +16,7 @@ import javax.sql.DataSource;
  */
 @Service
 public class ScheduleServiceImpl implements ScheduleService { // ScheduleService 인터페이스를 구현한 구현체
-    private ScheduleRepository scheduleRepository;
+    private final ScheduleRepository scheduleRepository;
 
     public ScheduleServiceImpl(ScheduleRepository scheduleRepository) {
         this.scheduleRepository = scheduleRepository;
@@ -24,7 +24,10 @@ public class ScheduleServiceImpl implements ScheduleService { // ScheduleService
 
     @Override
     public ScheduleResponseDto createSchedule(ScheduleRequestDto dto) {
-        scheduleRepository.createSchedule(dto);
-        return new ScheduleResponseDto(scheduleRepository);
+
+        // repository.saveSchedule(schedule);
+        // DB에 저장
+        ScheduleResponseDto result = scheduleRepository.createSchedule(dto);
+        return result;
     }
 }
