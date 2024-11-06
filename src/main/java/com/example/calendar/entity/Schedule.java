@@ -21,4 +21,10 @@ public class Schedule {
         this.title = dto.getTitle();
         this.contents = dto.getContents();
     }
+
+    public Schedule(Long id, String title, String contents) {
+        this.id = id;
+        this.title = title;
+        this.contents = contents;
+    }
 }

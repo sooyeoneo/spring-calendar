@@ -9,7 +9,6 @@ import lombok.Getter;
 public class ScheduleResponseDto {
     private Long id;
     private String userName;
-    private String password;
     private String title;
     private String contents;
     private String createdAt;
@@ -19,7 +18,6 @@ public class ScheduleResponseDto {
     public ScheduleResponseDto(Schedule schedule) {
         this.id = schedule.getId();
         this.userName = schedule.getUserName();
-        this.password = schedule.getPassword();
         this.title = schedule.getTitle();
         this.contents = schedule.getContents();
         this.createdAt = schedule.getCreatedAt();
