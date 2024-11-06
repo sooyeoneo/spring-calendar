@@ -4,12 +4,16 @@ import com.example.calendar.dto.ScheduleRequestDto;
 import com.example.calendar.dto.ScheduleResponseDto;
 import com.example.calendar.entity.Schedule;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,5 +47,28 @@ public class JdbcScheduleRepository implements ScheduleRepository {
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         return new ScheduleResponseDto(key.longValue(), dto.getUserName(), dto.getTitle(), dto.getContents(), null, null);
         // TODO 받아온 데이터를 리턴으로 바꿔줌.
+    }
+
+    @Override
+    public List<ScheduleResponseDto> findAllSchedules(String userName, String updatedAt) {
+        List<ScheduleResponseDto> result = jdbcTemplate.query("SELECT * FROM schedule WHERE user_name = ? AND DATE(updated_at) = DATE(?) ORDER BY updated_at", scheduleRowMapper(), userName, updatedAt);
+        return result;
+    }
+
+    // DB에 받아온 데이터를 ResponseDto 형식으로 바꿔줌
+    private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
+        return new RowMapper<ScheduleResponseDto>() {
+            @Override
+            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new ScheduleResponseDto(
+                        rs.getLong("id"),
+                        rs.getString("user_name"),
+                        rs.getString("title"),
+                        rs.getString("contents"),
+                        rs.getString("created_at"),
+                        rs.getString("updated_at")
+                );
+            }
+        };
     }
 }

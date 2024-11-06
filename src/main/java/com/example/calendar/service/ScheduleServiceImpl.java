@@ -7,6 +7,7 @@ import com.example.calendar.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 /**
  * Annotation @Service는 @Component와 같다, Spring Bean으로 등록한다는 뜻.
@@ -28,6 +29,12 @@ public class ScheduleServiceImpl implements ScheduleService { // ScheduleService
         // repository.saveSchedule(schedule);
         // DB에 저장
         ScheduleResponseDto result = scheduleRepository.createSchedule(dto);
+        return result;
+    }
+
+    @Override
+    public List<ScheduleResponseDto> findAllSchedules(String userName, String updatedAt) {
+        List<ScheduleResponseDto> result = scheduleRepository.findAllSchedules(userName, updatedAt);
         return result;
     }
 }

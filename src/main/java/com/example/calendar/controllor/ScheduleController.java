@@ -6,10 +6,15 @@ import com.example.calendar.entity.Schedule;
 import com.example.calendar.service.ScheduleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 
 // 클라이언트의 요청을 받고, 요청에 대한 처리를 Service Layer에 전달. Service에서 처리완료된 결과를 클라이언트에 응답
@@ -38,8 +43,17 @@ public class ScheduleController {
     // 생성 시 데이터를 전달해도 되고 안해도 되는데, ScheduleResponseDto를 전달
     // ResponseEntity가 ScheduleResponseDto를 감싸준다. 값의 타입을 위해 ReponseDto로 바꾼다. Sevelet
     public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto dto) {
-        scheduleService.createSchedule(dto); // ScheduleService로 dto 매개변수 값을 넘겨준다.
+        ScheduleResponseDto result = scheduleService.createSchedule(dto); // ScheduleService로 dto 매개변수 값을 넘겨준다.
         // ServiceLayer 호출 및 응답
-        return new ResponseEntity<>(scheduleService.createSchedule(dto), HttpStatus.CREATED);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(
+            @RequestParam String userName,
+            @RequestParam String updatedAt
+    ) {
+        List<ScheduleResponseDto> result = scheduleService.findAllSchedules(userName, updatedAt);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
