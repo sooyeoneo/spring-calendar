@@ -6,6 +6,7 @@ import com.example.calendar.entity.Schedule;
 import com.example.calendar.service.ScheduleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,12 +21,12 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 
-// 클라이언트의 요청을 받고, 요청에 대한 처리를 Service Layer에 전달. Service에서 처리완료된 결과를 클라이언트에 응답
+// 클라이언트의 요청을 받고, 요청에 대한 처리를 Service Layer에 전달. Service에서 처리 완료된 결과를 클라이언트에 JSON으로 응답
 @RestController // @Controller + @ResponseBody
 @RequestMapping("/schedules") // prefix 하는 URL을 설정할 때 사용
 public class ScheduleController {
 
-    // 주입된 의존성을 변경할 수 없어 객체의 상태를 안전하게 유지
+    // 주입된 ScheduleService 의존성을 변경할 수 없어 객체의 상태를 안전하게 유지됨
     private final ScheduleService scheduleService;
 
     /**
@@ -43,7 +44,7 @@ public class ScheduleController {
      * @return {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
      */
     @PostMapping // 생성 요청. PostMapping annotation 사용
-    // 생성 시 데이터를 전달해도 되고 안해도 되는데, ScheduleResponseDto를 전달
+    // ScheduleService로 dto 객체를 전달하여 일정 생성
     // ResponseEntity가 ScheduleResponseDto를 감싸준다. 값의 타입을 위해 ReponseDto로 바꾼다. Sevelet
     public ResponseEntity<ScheduleResponseDto> createSchedule(@RequestBody ScheduleRequestDto dto) {
         ScheduleResponseDto result = scheduleService.createSchedule(dto); // ScheduleService로 dto 매개변수 값을 넘겨준다.
@@ -53,7 +54,7 @@ public class ScheduleController {
 
     /**
      * 일정 전체 조회 API
-     * @return : {@link List<ScheduleResponseDto>} JSON 응답
+     * @return : {@link List<ScheduleResponseDto>} JSON 형식으로 응답할 ScheduleResponseDto 목록
      */
     @GetMapping
     public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(
@@ -67,7 +68,7 @@ public class ScheduleController {
     /**
      * 일정 단건 조회 API
      * @param id 식별자
-     * @return : {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
+     * @return : {@link ResponseEntity<ScheduleResponseDto>} JSON 형식으로 응답할 ScheduleResponseDto
      */
     @GetMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
@@ -79,10 +80,10 @@ public class ScheduleController {
     }
 
     /**
-     * 메모 제목 수정 API
+     * 일정 수정 API
      * @param id 식별자
-     * @param : {@link ScheduleRequestDto} 메모 수정 요청 객체
-     * @return : {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
+     * @param : {@link ScheduleRequestDto} dto 일정 수정 요청 객체
+     * @return : {@link ResponseEntity<ScheduleResponseDto>} JSON 형식으로 응답할 ScheduleResponseDto
      * @exception ResponseStatusException 요청 필수값이 없는 경우 400 Bad Request, 식별자로 조회된 Schedule이 없는 경우 404 Not Found
      */
     @PutMapping("/{id}")
@@ -93,10 +94,18 @@ public class ScheduleController {
         return new ResponseEntity<>(scheduleService.updateSchedule(id, dto), HttpStatus.OK);
     }
 
-    @DeleteMapping("/id")
-    public ReponseEntity<void> deledteSchedule(@PathVariable Long id) {
-
-        scheduleService.deleteSchedule(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+    /**
+     * 일정 삭제 API
+     * @param id 식별자
+     * @return {@link ResponseEntity<Void>} 성공 시 Data 없이 204 No Content 상태 코드만 반환.
+     * @exception ResponseStatusException 식별자로 조회된 Schedule이 없는 경우 404 Not Found
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletedSchedule(
+            @PathVariable Long id,
+            @RequestBody ScheduleRequestDto dto
+    ) {
+        scheduleService.deleteSchedule(id, dto.getPassword());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
