@@ -15,6 +15,7 @@ public interface ScheduleRepository {
     // 사용자와 업데이트 날짜로 일정 목록 조회
     List<ScheduleResponseDto> findAllSchedules(String userName, String updatedAt);
 
+
     // Id로 일정 조회, 일정이 존재하지 않으면 Optional.empty()를 반환
     Optional<ScheduleResponseDto> findScheduleById(Long id);
 
