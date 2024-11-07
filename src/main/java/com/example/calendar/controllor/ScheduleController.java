@@ -48,6 +48,10 @@ public class ScheduleController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    /**
+     * 일정 전체 조회 API
+     * @return : {@link List<ScheduleResponseDto>} JSON 응답
+     */
     @GetMapping
     public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(
             @RequestParam String userName,
@@ -55,5 +59,19 @@ public class ScheduleController {
     ) {
         List<ScheduleResponseDto> result = scheduleService.findAllSchedules(userName, updatedAt);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    /**
+     * 일정 단건 조회 API
+     * @param id 식별자
+     * @return : {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
+     */
+    @GetMapping("/{id}")
+    public ResponseEntity<ScheduleResponseDto> findScheduleById(@PathVariable Long id) {
+        // 일정 데이터를 가져오기 위한 ScheduleService 연결
+        // 식별자 id로 findScheduleById(id)를 호출해 ScheduleResponseDto 형식의 일정을 받아오기
+        ScheduleResponseDto optionalSchedule = scheduleService.findScheduleById(id);
+        // HTTP OK 상태로 일정을 ResponseEntity로 감싸서 반환
+        return new ResponseEntity<>(optionalSchedule, HttpStatus.OK);
     }
 }

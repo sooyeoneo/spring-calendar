@@ -5,11 +5,14 @@ import com.example.calendar.dto.ScheduleResponseDto;
 import com.example.calendar.entity.Schedule;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ScheduleRepository {
 
     // DB Query
-    public ScheduleResponseDto createSchedule(ScheduleRequestDto dto);
+    ScheduleResponseDto createSchedule(ScheduleRequestDto dto);
 
-    public List<ScheduleResponseDto> findAllSchedules(String userName, String updatedAt);
+    List<ScheduleResponseDto> findAllSchedules(String userName, String updatedAt);
+
+    Optional<ScheduleResponseDto> findScheduleById(Long id);
 }

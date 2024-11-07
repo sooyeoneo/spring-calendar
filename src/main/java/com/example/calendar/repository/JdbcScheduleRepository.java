@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Annotation @Repository는 @Component와 같다, Spring Bean으로 등록한다는 뜻.
@@ -70,5 +71,30 @@ public class JdbcScheduleRepository implements ScheduleRepository {
                 );
             }
         };
+    }
+
+    @Override
+    public Optional<ScheduleResponseDto> findScheduleById(Long id) {
+        List<ScheduleResponseDto> result = jdbcTemplate.query("SELECT * FROM schedule WHERE id = ?", scheduleRowMapperV2(), id);
+
+        return result.stream().findAny(); // findAny()의 역할 적어주기. 강의에 있음.
+    }
+
+    private RowMapper<ScheduleResponseDto> scheduleRowMapperV2() {
+        return new RowMapper<ScheduleResponseDto>() {
+            @Override
+            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return new ScheduleResponseDto(
+                        rs.getLong("id"),
+                        rs.getString("user_name"),
+                        rs.getString("title"),
+                        rs.getString("contents"),
+                        rs.getString("created_at"),
+                        rs.getString("updated_at")
+                );
+            }
+
+        };
+
     }
 }

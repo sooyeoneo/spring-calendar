@@ -4,10 +4,13 @@ import com.example.calendar.dto.ScheduleRequestDto;
 import com.example.calendar.dto.ScheduleResponseDto;
 import com.example.calendar.entity.Schedule;
 import com.example.calendar.repository.ScheduleRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Annotation @Service는 @Component와 같다, Spring Bean으로 등록한다는 뜻.
@@ -25,8 +28,6 @@ public class ScheduleServiceImpl implements ScheduleService { // ScheduleService
 
     @Override
     public ScheduleResponseDto createSchedule(ScheduleRequestDto dto) {
-
-        // repository.saveSchedule(schedule);
         // DB에 저장
         ScheduleResponseDto result = scheduleRepository.createSchedule(dto);
         return result;
@@ -37,4 +38,18 @@ public class ScheduleServiceImpl implements ScheduleService { // ScheduleService
         List<ScheduleResponseDto> result = scheduleRepository.findAllSchedules(userName, updatedAt);
         return result;
     }
+
+    @Override
+    public ScheduleResponseDto findScheduleById(Long id) {
+        // id 식별자의 scheduleResponseDto가 없다면?
+        // List의 경우 데이터가 없으면 빈배열을 응답했지만 ScheduleResponseDto 객체 하나 조회의 경우
+        Optional<ScheduleResponseDto> optionalSchedule = scheduleRepository.findScheduleById(id);
+
+        // NPE(NullPointerException) 방지
+        if (optionalSchedule.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
+        }
+        return optionalSchedule.get();
+    }
+
 }

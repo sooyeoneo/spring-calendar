@@ -4,9 +4,12 @@ import com.example.calendar.dto.ScheduleRequestDto;
 import com.example.calendar.dto.ScheduleResponseDto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ScheduleService {
-    public ScheduleResponseDto createSchedule(ScheduleRequestDto dto);
+    ScheduleResponseDto createSchedule(ScheduleRequestDto dto);
 
-    public List<ScheduleResponseDto> findAllSchedules(String userName, String updatedAt);
+    List<ScheduleResponseDto> findAllSchedules(String userName, String updatedAt);
+
+    ScheduleResponseDto findScheduleById(Long id);
 }
