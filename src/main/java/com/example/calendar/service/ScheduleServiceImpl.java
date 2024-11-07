@@ -47,9 +47,33 @@ public class ScheduleServiceImpl implements ScheduleService { // ScheduleService
 
         // NPE(NullPointerException) 방지
         if (optionalSchedule.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Does not exist id = " + id);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 id입니다. = " + id);
         }
         return optionalSchedule.get();
     }
 
+    @Override
+    public ScheduleResponseDto updateSchedule(Long id, ScheduleRequestDto dto) {
+        String password = scheduleRepository.findPasswordById(id);
+
+        if (password.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 id입니다. = " + id);
+        }
+
+        if (dto.getUserName() == null || dto.getPassword() == null || dto.getTitle() == null || dto.getContents() == null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "필수 정보를 모두 입력하세요.");
+        }
+
+        if (!dto.getPassword().equals(password)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "올바른 비밀번호를 입력하세요."); // 401번...
+        }
+
+        int updatedRow = scheduleRepository.updateSchedule(id, dto);
+
+        if (updatedRow == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "수정된 데이터가 없습니다.");
+        }
+
+        return scheduleRepository.findScheduleById(id).get(); //  .Get() Optional에 감싸진 데이터를 꼭 꺼내오자.
+    }
 }

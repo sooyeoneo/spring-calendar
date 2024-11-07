@@ -75,23 +75,26 @@ public class JdbcScheduleRepository implements ScheduleRepository {
 
     @Override
     public Optional<ScheduleResponseDto> findScheduleById(Long id) {
-        List<ScheduleResponseDto> result = jdbcTemplate.query("SELECT * FROM schedule WHERE id = ?", scheduleRowMapperV2(), id);
+        List<ScheduleResponseDto> result = jdbcTemplate.query("SELECT * FROM schedule WHERE id = ?", scheduleRowMapper(), id);
 
         return result.stream().findAny(); // findAny()의 역할 적어주기. 강의에 있음.
     }
 
-    private RowMapper<ScheduleResponseDto> scheduleRowMapperV2() {
-        return new RowMapper<ScheduleResponseDto>() {
+    @Override
+    public String findPasswordById(Long id) {
+        return jdbcTemplate.query("SELECT password FROM schedule WHERE id = ?", scheduleRowMapperV2(), id).stream().findAny().get();
+    }
+
+    @Override
+    public int updateSchedule(Long id, ScheduleRequestDto dto) {
+        return jdbcTemplate.update("UPDATE schedule SET user_name = ?, title = ?, contents = ? WHERE id = ?", dto.getUserName(), dto.getTitle(), dto.getContents());
+    }
+
+    private RowMapper<String> scheduleRowMapperV2() {
+        return new RowMapper<String>() {
             @Override
-            public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                return new ScheduleResponseDto(
-                        rs.getLong("id"),
-                        rs.getString("user_name"),
-                        rs.getString("title"),
-                        rs.getString("contents"),
-                        rs.getString("created_at"),
-                        rs.getString("updated_at")
-                );
+            public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+                return rs.getString("password");
             }
 
         };

@@ -15,4 +15,8 @@ public interface ScheduleRepository {
     List<ScheduleResponseDto> findAllSchedules(String userName, String updatedAt);
 
     Optional<ScheduleResponseDto> findScheduleById(Long id);
+
+    String findPasswordById(Long id);
+
+    int updateSchedule(Long id, ScheduleRequestDto dto);
 }
