@@ -6,6 +6,7 @@ import com.example.calendar.entity.Schedule;
 import com.example.calendar.service.ScheduleService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -76,11 +78,25 @@ public class ScheduleController {
         return new ResponseEntity<>(optionalSchedule, HttpStatus.OK);
     }
 
+    /**
+     * 메모 제목 수정 API
+     * @param id 식별자
+     * @param : {@link ScheduleRequestDto} 메모 수정 요청 객체
+     * @return : {@link ResponseEntity<ScheduleResponseDto>} JSON 응답
+     * @exception ResponseStatusException 요청 필수값이 없는 경우 400 Bad Request, 식별자로 조회된 Schedule이 없는 경우 404 Not Found
+     */
     @PutMapping("/{id}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long id,
             @RequestBody ScheduleRequestDto dto
     ) {
         return new ResponseEntity<>(scheduleService.updateSchedule(id, dto), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/id")
+    public ReponseEntity<void> deledteSchedule(@PathVariable Long id) {
+
+        scheduleService.deleteSchedule(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

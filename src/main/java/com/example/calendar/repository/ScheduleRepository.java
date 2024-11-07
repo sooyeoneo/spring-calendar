@@ -2,7 +2,6 @@ package com.example.calendar.repository;
 
 import com.example.calendar.dto.ScheduleRequestDto;
 import com.example.calendar.dto.ScheduleResponseDto;
-import com.example.calendar.entity.Schedule;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,4 +18,6 @@ public interface ScheduleRepository {
     String findPasswordById(Long id);
 
     int updateSchedule(Long id, ScheduleRequestDto dto);
+
+    int deleteSchedule(Long id);
 }

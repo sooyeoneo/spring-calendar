@@ -76,4 +76,16 @@ public class ScheduleServiceImpl implements ScheduleService { // ScheduleService
 
         return scheduleRepository.findScheduleById(id).get(); //  .Get() Optional에 감싸진 데이터를 꼭 꺼내오자.
     }
+
+    @Override
+    public void deleteSchedule(Long id) {
+        int deletedRow = scheduleRepository.deleteSchedule(id);
+
+        if (deletedRow == 0) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 id입니다. = " + id);
+        }
+
+    }
+
+
 }

@@ -2,7 +2,6 @@ package com.example.calendar.repository;
 
 import com.example.calendar.dto.ScheduleRequestDto;
 import com.example.calendar.dto.ScheduleResponseDto;
-import com.example.calendar.entity.Schedule;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -56,6 +55,13 @@ public class JdbcScheduleRepository implements ScheduleRepository {
         return result;
     }
 
+    @Override
+    public Optional<ScheduleResponseDto> findScheduleById(Long id) {
+        List<ScheduleResponseDto> result = jdbcTemplate.query("SELECT * FROM schedule WHERE id = ?", scheduleRowMapper(), id);
+
+        return result.stream().findAny(); // findAny()의 역할 적어주기. 강의에 있음.
+    }
+
     // DB에 받아온 데이터를 ResponseDto 형식으로 바꿔줌
     private RowMapper<ScheduleResponseDto> scheduleRowMapper() {
         return new RowMapper<ScheduleResponseDto>() {
@@ -74,13 +80,6 @@ public class JdbcScheduleRepository implements ScheduleRepository {
     }
 
     @Override
-    public Optional<ScheduleResponseDto> findScheduleById(Long id) {
-        List<ScheduleResponseDto> result = jdbcTemplate.query("SELECT * FROM schedule WHERE id = ?", scheduleRowMapper(), id);
-
-        return result.stream().findAny(); // findAny()의 역할 적어주기. 강의에 있음.
-    }
-
-    @Override
     public String findPasswordById(Long id) {
         return jdbcTemplate.query("SELECT password FROM schedule WHERE id = ?", scheduleRowMapperV2(), id).stream().findAny().get();
     }
@@ -90,14 +89,17 @@ public class JdbcScheduleRepository implements ScheduleRepository {
         return jdbcTemplate.update("UPDATE schedule SET user_name = ?, title = ?, contents = ? WHERE id = ?", dto.getUserName(), dto.getTitle(), dto.getContents());
     }
 
+    @Override
+    public int deleteSchedule(Long id) {
+        return jdbcTemplate.update("DELETE FROM schedule WHERE id = ?", id);
+    }
+
     private RowMapper<String> scheduleRowMapperV2() {
         return new RowMapper<String>() {
             @Override
             public String mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return rs.getString("password");
             }
-
         };
-
     }
 }
