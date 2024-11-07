@@ -54,7 +54,7 @@ public class JdbcScheduleRepository implements ScheduleRepository {
     @Override
     public List<ScheduleResponseDto> findAllSchedules(String userName, String updatedAt) {
         // 조건(userName, updatedAt)에 따라 일정 목록을 조회
-        List<ScheduleResponseDto> result = jdbcTemplate.query("SELECT * FROM schedule WHERE user_name = ? AND DATE(updated_at) = DATE(?) ORDER BY updated_at", scheduleRowMapper(), userName, updatedAt);
+        List<ScheduleResponseDto> result = jdbcTemplate.query("SELECT * FROM schedule WHERE user_name = ? OR DATE(updated_at) = DATE(?) ORDER BY updated_at", scheduleRowMapper(), userName, updatedAt);
         return result;
     }
 
