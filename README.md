@@ -101,6 +101,6 @@
 ## 트러블 슈팅 🎯
 [일정 관리 앱 만들기 ERD & API](https://sooyeoneo.tistory.com/57)
 
+[MySQL 내용 정리](https://sooyeoneo.tistory.com/58)
 
-
-[일정 관리 앱 만들기_트러블슈팅.TIL](https://sooyeoneo.tistory.com/62)
+[일정 관리 앱 서버 만들기_트러블슈팅.TIL](https://sooyeoneo.tistory.com/62)
