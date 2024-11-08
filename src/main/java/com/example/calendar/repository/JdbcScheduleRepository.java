@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,25 @@ public class JdbcScheduleRepository implements ScheduleRepository {
     @Override
     public List<ScheduleResponseDto> findAllSchedules(String userName, String updatedAt) {
         // 조건(userName, updatedAt)에 따라 일정 목록을 조회
-        List<ScheduleResponseDto> result = jdbcTemplate.query("SELECT * FROM schedule WHERE user_name = ? OR DATE(updated_at) = DATE(?) ORDER BY updated_at", scheduleRowMapper(), userName, updatedAt);
+        String sql;
+        List<Object> params = new ArrayList<>(); // 파라미터 리스트
+
+        // 두 값이 모두 null인 경우 전체 목록 조회
+        if (userName == null && updatedAt == null) {
+            sql = "SELECT * FROM schedule ORDER BY updated_at";
+        } else {
+            // 조건이 있는 경우에만 필터링 조건을 추가
+            sql = "SELECT * FROM schedule WHERE (user_name = ? OR ? IS NULL) AND (DATE(updated_at) = DATE(?) OR ? IS NULL) ORDER BY updated_at";
+
+            // 조건에 따른 파라미터 추가
+            params.add(userName);
+            params.add(userName);
+            params.add(updatedAt);
+            params.add(updatedAt);
+        }
+
+        // SQL 실행 결과를 result에 저장, 결과 반환
+        List<ScheduleResponseDto> result = jdbcTemplate.query(sql, scheduleRowMapper(), params.toArray());
         return result;
     }
 

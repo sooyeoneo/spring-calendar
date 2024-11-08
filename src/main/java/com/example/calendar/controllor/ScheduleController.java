@@ -58,8 +58,8 @@ public class ScheduleController {
      */
     @GetMapping
     public ResponseEntity<List<ScheduleResponseDto>> findAllSchedules(
-            @RequestParam String userName,
-            @RequestParam String updatedAt
+            @RequestParam(required = false) String userName,
+            @RequestParam(required = false) String updatedAt
     ) {
         List<ScheduleResponseDto> result = scheduleService.findAllSchedules(userName, updatedAt);
         return new ResponseEntity<>(result, HttpStatus.OK);
