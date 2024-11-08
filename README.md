@@ -5,7 +5,7 @@
 
 
 ## API 명세서 📋
-[API 명세서 - Postman](https://documenter.getpostman.com/view/39375040/2sAY4vfhKe)
+[Postman](https://documenter.getpostman.com/view/39375040/2sAY4vfhKe)
 
 ------------
 ## 트러블 슈팅 🎯
