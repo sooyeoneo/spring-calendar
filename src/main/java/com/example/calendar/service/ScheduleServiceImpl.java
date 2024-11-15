@@ -102,7 +102,7 @@ public class ScheduleServiceImpl implements ScheduleService { // ScheduleService
         int deletedRow = scheduleRepository.deleteSchedule(id);
 
         if (deletedRow == 0) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 id입니다. = " + id);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "삭제가 되지 않았습니다. ");
         }
 
     }
